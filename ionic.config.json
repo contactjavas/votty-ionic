@@ -1,0 +1,7 @@
+{
+  "name": "votty",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
