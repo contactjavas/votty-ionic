@@ -47,6 +47,8 @@ export class AppComponent {
     });
 
     this.storage.get("user").then((user) => {
+      console.log(user);
+      
       if (user) {
         this.menus = this.menu.loggedIn;
         this.router.navigateByUrl("/app");

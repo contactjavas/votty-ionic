@@ -42,6 +42,9 @@ export class AuthService {
     this.storage.remove("user");
 
     this.menus = this.menu.notLoggedIn;
+
+    this.setLoggedInState(true);
+    this.router.navigateByUrl("/login");
   }
 
   getLoggedInState() {
@@ -54,7 +57,7 @@ export class AuthService {
 
   /**
    * We can't just use handleError from ErrorService to prevent cyclic/ circular dependency.
-   * Because ErrorService imports AuthService, then we can't import ErrorService from here.
+   * Because ErrorService already imports AuthService, so we can't import ErrorService from this AuthService.
    *
    * @param httpError HttpErrorResponse
    */

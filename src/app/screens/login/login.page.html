@@ -1,9 +1,33 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding login-screen">
+  <div class="bg-image"></div>
+  <div class="overlay has-gradient"></div>
 
-<ion-content>
+  <div class="screen-container ion-align-items-center">
+    <div>
+      <form [formGroup]="loginForm" (submit)="login()">
 
+        <ion-item class="ion-margin-bottom">
+          <ion-icon name="person" color="medium" slot="start"></ion-icon>
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input name="email" formControlName="email" type="text" placeholder="Masukkan email"
+            autocomplete="off">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="ion-margin-bottom">
+          <ion-icon name="lock-closed-outline" color="medium" slot="start"></ion-icon>
+          <ion-label position="stacked">Password</ion-label>
+          <ion-input name="password" formControlName="password" type="password" placeholder="Masukkan password"
+            autocomplete="off">
+          </ion-input>
+        </ion-item>
+
+        <ion-button type="submit" expand="block" fill="solid" color="secondary" shape="round" class="login-button">
+          <ion-spinner *ngIf="loading; else buttonNotLoading"></ion-spinner>
+          <ng-template #buttonNotLoading>Masuk</ng-template>
+        </ion-button>
+
+      </form>
+    </div>
+  </div>
 </ion-content>

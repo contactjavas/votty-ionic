@@ -1,7 +1,28 @@
 // --------------------
 // General
 // --------------------
+ion-app {
+  max-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .is-flex {
   display: flex;
   flex-wrap: wrap;
+}
+
+.screen-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+
+  > form, > div {
+    width: 100%;
+  }
+}
+
+ion-content {
+  --background: var(--ion-color-primary);
 }

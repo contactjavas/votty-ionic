@@ -1,9 +1,33 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>tabs</ion-title>
+    <ion-title>
+      <img src="assets/images/logo-blue.png" alt="Votty">
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="secondary" (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-tabs>
+  <ion-tab-bar slot="bottom" color="secondary">
 
-</ion-content>
+    <ion-tab-button tab="survey-list">
+      <ion-icon name="cube"></ion-icon>
+      <ion-label>Survey</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="vote-list">
+      <ion-icon name="create"></ion-icon>
+      <ion-label>Votes</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="respondent-list">
+      <ion-icon name="people"></ion-icon>
+      <ion-label>Respondents</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-tabs>
