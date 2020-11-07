@@ -7,14 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { SurveyListPageRoutingModule } from './survey-list-routing.module';
 
 import { SurveyListPage } from './survey-list.page';
+import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SurveyListPageRoutingModule
+    SurveyListPageRoutingModule,
   ],
-  declarations: [SurveyListPage]
+  declarations: [SurveyListPage, TopbarComponent]
 })
 export class SurveyListPageModule {}

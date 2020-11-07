@@ -1,5 +1,4 @@
 export interface UserData {
-  token: string;
   id: number;
   email: string;
   firstName: string;

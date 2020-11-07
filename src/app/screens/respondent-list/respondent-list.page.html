@@ -1,3 +1,35 @@
-<ion-content>
+<app-topbar></app-topbar>
 
+<ion-content class="ion-padding">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list lines="none" class="simple-list">
+        <ion-list-header>
+            <ion-label>
+                Daftar responden:
+            </ion-label>
+        </ion-list-header>
+        <ion-item class="ion-margin" *ngFor="let respondent of respondents">
+            <ion-label>
+                <ion-text>
+                    <h3 class="ion-text-wrap">
+                        <strong>
+                            {{ respondent ? respondent.name : '' }}
+                        </strong>
+                    </h3>
+                </ion-text>
+                <ion-text color="medium" class="description">
+                    Usia {{ respondent ? respondent.ageRange : '' }}
+                </ion-text>
+            </ion-label>
+        </ion-item>
+    </ion-list>
 </ion-content>
+
+<ion-fab slot="fixed" horizontal="end" vertical="bottom">
+    <ion-fab-button color="secondary">
+        <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+</ion-fab>

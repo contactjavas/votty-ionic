@@ -12,6 +12,11 @@ ion-app {
   flex-wrap: wrap;
 }
 
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .screen-container {
   display: flex;
   align-items: center;
@@ -23,6 +28,40 @@ ion-app {
   }
 }
 
+ion-title img {
+  max-height: 35px;
+}
+
 ion-content {
   --background: var(--ion-color-primary);
+}
+
+.simple-list {
+  background: none;
+
+  ion-list-header {
+    --color: #fff;
+  }
+
+  ion-item {
+    --border-radius: 4px;
+
+    h3 {
+      margin-bottom: 5px;
+    }
+
+    .description {
+      font-size: 12px;
+    }
+  }
+
+  .date-column, .time-column {
+    ion-icon {
+      margin-right: 5px;
+    }
+  }
+
+  .time-column {
+    padding-left: 15px;
+  }
 }

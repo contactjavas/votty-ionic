@@ -1,3 +1,54 @@
-<ion-content>
+<app-topbar></app-topbar>
 
+<ion-content class="ion-padding">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list lines="none" class="simple-list">
+        <ion-list-header>
+            <ion-label>
+                Daftar survey yang telah dimasukkan:
+            </ion-label>
+        </ion-list-header>
+        <ion-item class="ion-margin" *ngFor="let vote of votes">
+            <ion-label>
+                <ion-text>
+                    <h3 class="ion-text-wrap">
+                        <strong>{{ vote ? vote.respondent.name : '' }}</strong> berpartisipasi pada survey "<strong>{{ vote ? vote.survey.title : '' }}</strong>"
+                    </h3>
+                </ion-text>
+
+                <div class="columns description">
+                    <div class="columns">
+                        <div class="column date-column">
+                            <div class="columns">
+                                <div class="column">
+                                    <ion-icon color="medium" name="calendar-outline"></ion-icon>
+                                </div>
+                                <div class="column">
+                                    <ion-text color="medium">
+                                        {{ vote ? formatToDate(vote.createdAt) : '' }}
+                                    </ion-text>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column time-column">
+                            <div class="columns">
+                                <div class="column">
+                                    <ion-icon color="medium" name="time-outline"></ion-icon>
+                                </div>
+                                <div class="column">
+                                    <ion-text color="medium">
+                                        {{ vote ? formatToTime(vote.createdAt) : '' }}
+                                    </ion-text>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </ion-label>
+        </ion-item>
+    </ion-list>
 </ion-content>
