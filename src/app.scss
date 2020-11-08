@@ -70,6 +70,12 @@ ion-content {
   border-radius: 4px;
 }
 
+.horizontal-radio-group {
+  ion-radio {
+    margin-right: 7px;
+  }
+}
+
 .footer-cta {
   --background: none;
 
