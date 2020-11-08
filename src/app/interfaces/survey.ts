@@ -3,13 +3,13 @@ export interface Survey {
 
 export interface SurveyData {
   id: number;
-  title: String;
+  title: string;
   target: number;
-  createdAt: String;
-  endDate: String;
+  createdAt: string;
+  endDate: string;
 }
 
 export interface SimpleSurveyData {
   id: number;
-  title: String;
+  title: string;
 }

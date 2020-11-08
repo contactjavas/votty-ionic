@@ -30,7 +30,11 @@ const routes: Routes = [
     path: "",
     redirectTo: "login",
     pathMatch: "full",
+  },  {
+    path: 'add-respondent',
+    loadChildren: () => import('./screens/add-respondent/add-respondent.module').then( m => m.AddRespondentPageModule)
   },
+
 ];
 
 @NgModule({

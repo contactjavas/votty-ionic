@@ -65,3 +65,19 @@ ion-content {
     padding-left: 15px;
   }
 }
+
+.field-list {
+  border-radius: 4px;
+}
+
+.footer-cta {
+  --background: none;
+
+  ion-toolbar {
+    --background: none;
+  }
+
+  ion-button {
+    min-height: 56px;
+  }
+}

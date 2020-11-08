@@ -6,7 +6,7 @@ export interface Vote {
 
 export interface VoteData {
   id: number;
-  createdAt: String;
+  createdAt: string;
   survey: SimpleSurveyData;
   respondent: SimpleRespondentData;
 }

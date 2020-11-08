@@ -2,16 +2,16 @@ export interface Respondent {}
 
 export interface RespondentData {
   id: number;
-  name: String;
-  ageRange: String;
-  job: String;
-  incomeRange: String;
+  name: string;
+  ageRange: string;
+  job: string;
+  incomeRange: string;
   activeOnSocialMedia: number;
-  gender: String;
+  gender: string;
   genderId: number;
 }
 
 export interface SimpleRespondentData {
   id: number;
-  name: String;
+  name: string;
 }

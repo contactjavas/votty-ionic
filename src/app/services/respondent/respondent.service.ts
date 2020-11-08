@@ -19,7 +19,7 @@ export class RespondentService {
     private appService: AppService
   ) { }
 
-  fetchAll(token: String): Observable<Response> {
+  fetchAll(token: string): Observable<Response> {
     this.appService.httpOptions.headers = this.appService.httpOptions.headers.set(
       "Authorization",
       "Bearer " + token
