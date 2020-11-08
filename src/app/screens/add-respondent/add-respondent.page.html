@@ -12,10 +12,11 @@
 <ion-content>
   <form [formGroup]="addRespondentForm" (submit)="onSubmit()">
 
-    <div class="upload-area ion-wrap ion-align-items-center ion-justify-content-center">
-      <ion-button color="light" shape="round" class="camera-trigger" (click)="addPhotoToGallery()">
-        <ion-icon name="camera" slot="icon-only" color="primary"></ion-icon>
-      </ion-button>
+    <div class="upload-area">
+      <div class="camera-trigger" (click)="capturePhoto()">
+        <img class="captured-photo" [src]="photoSrc" alt="">
+        <ion-icon name="camera" size="large" color="primary"></ion-icon>
+      </div>
       <ion-label color="medium upload-label">Choose photo</ion-label>
     </div>
     

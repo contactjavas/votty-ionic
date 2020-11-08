@@ -57,7 +57,7 @@ export class AuthService {
 
   /**
    * We can't just use handleError from ErrorService to prevent cyclic/ circular dependency.
-   * Because ErrorService already imports AuthService, so we can't import ErrorService from this AuthService.
+   * Because ErrorService already imports AuthService, so we can't import back ErrorService from this AuthService.
    *
    * @param httpError HttpErrorResponse
    */

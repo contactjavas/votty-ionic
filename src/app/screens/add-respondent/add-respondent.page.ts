@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
 import { Storage } from "@ionic/storage";
 import {
@@ -9,7 +10,7 @@ import {
   AlertController,
 } from "@ionic/angular";
 
-import { format, parseISO } from "date-fns";
+import { CameraPhoto } from "@capacitor/core";
 
 import { RespondentService } from "src/app/services/respondent/respondent.service";
 import { ErrorService } from "src/app/services/error/error.service";
@@ -26,6 +27,8 @@ export class AddRespondentPage implements OnInit {
   addRespondentForm: FormGroup;
   formData: any;
   token: string;
+  capturedPhoto: any;
+  photoSrc: SafeUrl = "assets/images/default-avatar.png";
 
   constructor(
     public loadingController: LoadingController,
@@ -34,6 +37,7 @@ export class AddRespondentPage implements OnInit {
     public storage: Storage,
     private router: Router,
     private formBuilder: FormBuilder,
+    private sanitizer: DomSanitizer,
     public errorService: ErrorService,
     public respondentService: RespondentService,
     public photoService: PhotoService
@@ -116,7 +120,7 @@ export class AddRespondentPage implements OnInit {
     const toast = await this.toastController.create({
       message: "Silakan cek kembali isian form.",
       duration: 2000,
-      position: 'bottom'
+      position: "bottom",
     });
     toast.present();
   }
@@ -138,7 +142,12 @@ export class AddRespondentPage implements OnInit {
     await alert.present();
   }
 
-  addPhotoToGallery() {
-    this.photoService.addNewToGallery();
+  async capturePhoto() {
+    this.capturedPhoto = await this.photoService.capturePhoto();
+    this.photoSrc = this.sanitizer.bypassSecurityTrustUrl(
+      this.capturedPhoto.webPath
+    );
+
+    console.log(this.capturedPhoto);
   }
 }

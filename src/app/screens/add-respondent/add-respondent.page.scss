@@ -4,13 +4,30 @@ app-add-respondent {
 
 .upload-area {
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-flow: column;
 
   .camera-trigger {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     margin-top: 20px;
     margin-bottom: 10px;
     width: 110px;
     height: 110px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .captured-photo {
+    max-width: 110px;
+  }
+
+  ion-icon {
+    position: absolute;
   }
 
   .upload-label {
