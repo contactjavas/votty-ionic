@@ -9,6 +9,7 @@ import { Plugins, StatusBarStyle } from "@capacitor/core";
 
 import { Menu } from './classes/menu/menu';
 import { AuthService } from './services/auth/auth.service';
+import { AppService } from "./services/app/app.service";
 
 const { SplashScreen, StatusBar } = Plugins;
 
@@ -27,6 +28,7 @@ export class AppComponent {
     private router: Router,
     private storage: Storage,
     private menu: Menu,
+    private appService: AppService,
     private authService: AuthService
   ) {
     this.initializeApp();
@@ -46,8 +48,13 @@ export class AppComponent {
       }
     });
 
-    this.storage.get("user").then((user) => {
-      if (user) {
+    this.storage.get("token").then((token) => {
+      if (token) {
+        this.appService.httpOptions.headers = this.appService.httpOptions.headers.set(
+          "Authorization",
+          "Bearer " + token
+        );
+
         this.menus = this.menu.loggedIn;
 
         if (this.router.url === '/login') {

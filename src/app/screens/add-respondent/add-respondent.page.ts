@@ -25,7 +25,6 @@ import { AddRespondentFormData } from "src/app/interfaces/form";
 export class AddRespondentPage implements OnInit {
   addFormData: AddRespondentFormData;
   addRespondentForm: FormGroup;
-  formData: any;
   token: string;
   capturedPhoto: any;
   photoSrc: SafeUrl = "assets/images/default-avatar.png";
@@ -93,10 +92,18 @@ export class AddRespondentPage implements OnInit {
     }
 
     /**
-     * We copy the values info this.formData,
+     * We copy the values info to "data",
      * so that we can modify the values without affecting the field's values.
      */
-    this.formData = this.addRespondentForm.value;
+    let data = this.addRespondentForm.value;
+
+    if (this.capturedPhoto) {
+      const webPath = await fetch(this.capturedPhoto.webPath!);
+      const blob = await webPath.blob();
+  
+      data.photo = blob;
+    }
+
 
     const loading = await this.loadingController.create({
       message: "Processing...",
@@ -104,7 +111,7 @@ export class AddRespondentPage implements OnInit {
 
     await loading.present();
 
-    this.respondentService.add(this.token, this.formData).subscribe(
+    this.respondentService.add(data).subscribe(
       (res) => {
         loading.dismiss();
         this.showSuccessMessage(res);
@@ -133,7 +140,7 @@ export class AddRespondentPage implements OnInit {
         {
           text: "OK",
           handler: () => {
-            this.router.navigateByUrl("/app/tabs/orders");
+            this.router.navigateByUrl("/app/tabs/respondent-list");
           },
         },
       ],

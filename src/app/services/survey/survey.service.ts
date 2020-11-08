@@ -20,11 +20,6 @@ export class SurveyService {
   ) { }
 
   fetchAll(token: string): Observable<Response> {
-    this.appService.httpOptions.headers = this.appService.httpOptions.headers.set(
-      "Authorization",
-      "Bearer " + token
-    );
-
     return this.http
       .get<Response>(
         this.appService.apiUrl + "/surveys",

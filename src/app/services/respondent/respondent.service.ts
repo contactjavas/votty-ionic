@@ -19,11 +19,6 @@ export class RespondentService {
   ) {}
 
   fetchAll(token: string): Observable<Response> {
-    this.appService.httpOptions.headers = this.appService.httpOptions.headers.set(
-      "Authorization",
-      "Bearer " + token
-    );
-
     return this.http
       .get<Response>(
         this.appService.apiUrl + "/respondents",
@@ -33,11 +28,6 @@ export class RespondentService {
   }
 
   fetchAddFormData(token: string): Observable<Response> {
-    this.appService.httpOptions.headers = this.appService.httpOptions.headers.set(
-      "Authorization",
-      "Bearer " + token
-    );
-
     return this.http
       .get<Response>(
         this.appService.apiUrl + "/respondents/add",
@@ -46,12 +36,21 @@ export class RespondentService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  add(token: string, formData: any): Observable<Response> {
+  add(data: any): Observable<Response> {
+    const formData = new FormData();
+
+    for (const prop in data) {
+      formData.append(prop, data[prop]);
+    }
+
+    const httpOptions = this.appService.httpOptions;
+    httpOptions.headers = httpOptions.headers.delete("Content-Type");
+
     return this.http
       .post<Response>(
-        this.appService.apiUrl + "/login",
+        this.appService.apiUrl + "/respondents/add-new",
         formData,
-        this.appService.httpOptions
+        httpOptions
       )
       .pipe(catchError(this.errorService.handleError));
   }

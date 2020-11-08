@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AlertController, LoadingController } from "@ionic/angular";
 import { Storage } from "@ionic/storage";
 
+import { AppService } from 'src/app/services/app/app.service';
 import { AuthService } from "../../services/auth/auth.service";
 import { ErrorService } from "../../services/error/error.service";
 import { UserData } from "../../interfaces/user";
@@ -25,6 +26,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private storage: Storage,
+    private appService: AppService,
     private authService: AuthService,
     private errorService: ErrorService
   ) {
@@ -44,6 +46,11 @@ export class LoginPage implements OnInit {
       (res: any) => {
         this.storage.set("token", res.token);
         this.storage.set("user", res.data);
+
+        this.appService.httpOptions.headers = this.appService.httpOptions.headers.set(
+          "Authorization",
+          "Bearer " + res.token
+        );
 
         this.authService.setLoggedInState(true);
         this.loading = false;

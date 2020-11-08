@@ -29,7 +29,7 @@
     
       <ion-item>
         <ion-label position="stacked">Nama</ion-label>
-        <ion-input name="name" formControlName="address" type="text" placeholder="Nama responden" required="true" autocomplete="off">
+        <ion-input name="name" formControlName="name" type="text" placeholder="Nama responden" required="true" autocomplete="off">
         </ion-input>
       </ion-item>
     
@@ -123,21 +123,21 @@
         </ion-select>
       </ion-item>
     
-      <ion-radio-group class="horizontal-radio-group">
+      <ion-radio-group name="active_on_social_media" formControlName="active_on_social_media" class="horizontal-radio-group">
         <ion-item>
           <ion-label position="stacked">Aktif di sosial media</ion-label>
     
           <ion-row>
             <ion-col>
               <ion-item lines="none">
-                <ion-radio name="active_on_social_media" formControlName="active_on_social_media" value="1"></ion-radio>
+                <ion-radio value="1"></ion-radio>
                 <ion-label>Ya</ion-label>
               </ion-item>
             </ion-col>
     
             <ion-col>
               <ion-item lines="none">
-                <ion-radio name="active_on_social_media" formControlName="active_on_social_media" value="0"></ion-radio>
+                <ion-radio value="0"></ion-radio>
                 <ion-label>Tidak</ion-label>
               </ion-item>
             </ion-col>
