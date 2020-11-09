@@ -10,12 +10,13 @@ import {
   AlertController,
 } from "@ionic/angular";
 
-import { CameraPhoto } from "@capacitor/core";
+import { Response } from "../../interfaces/response";
 
 import { RespondentService } from "src/app/services/respondent/respondent.service";
 import { ErrorService } from "src/app/services/error/error.service";
 import { PhotoService } from "src/app/services/photo/photo.service";
 import { AddRespondentFormData } from "src/app/interfaces/form";
+import { RespondentListState } from "src/app/stores/respondent-list/respondent-list-state";
 
 @Component({
   selector: "app-add-respondent",
@@ -39,7 +40,8 @@ export class AddRespondentPage implements OnInit {
     private sanitizer: DomSanitizer,
     public errorService: ErrorService,
     public respondentService: RespondentService,
-    public photoService: PhotoService
+    public photoService: PhotoService,
+    private respondentListState: RespondentListState
   ) {
     this.addRespondentForm = this.formBuilder.group({
       name: ["", Validators.required],
@@ -71,8 +73,6 @@ export class AddRespondentPage implements OnInit {
 
       this.respondentService.fetchAddFormData(token).subscribe(
         (res) => {
-          console.log(res.data);
-
           this.addFormData = res.data;
 
           loading.dismiss();
@@ -112,7 +112,8 @@ export class AddRespondentPage implements OnInit {
     await loading.present();
 
     this.respondentService.add(data).subscribe(
-      (res) => {
+      (res: Response) => {
+        this.respondentListState.add(res.data);
         loading.dismiss();
         this.showSuccessMessage(res);
       },

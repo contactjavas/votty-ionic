@@ -1,19 +1,18 @@
-import { Injectable } from "@angular/core";
+import { Component, Injectable, OnInit } from "@angular/core";
 
-import { Subject, BehaviorSubject, Observable } from "rxjs";
-
-import { RespondentService } from "../../services/respondent/respondent.service";
+import { BehaviorSubject } from "rxjs";
+import { take } from "rxjs/operators";
 
 import { RespondentData } from "src/app/interfaces/respondent";
 
-
+@Component({})
 @Injectable({
   providedIn: "root",
 })
 export class RespondentListState {
   respondentList = new BehaviorSubject<RespondentData[]>([]);
 
-  constructor(private respondentService: RespondentService) {}
+  constructor() {}
 
   get() {
     return this.respondentList.asObservable();
@@ -24,22 +23,20 @@ export class RespondentListState {
   }
 
   add(respondent: RespondentData) {
-    const subscription = this.get().subscribe(
-      (respondentList: RespondentData[]) => {
-        respondentList.push(respondent);
+    this.get()
+      .pipe(take(1))
+      .subscribe((respondentList: RespondentData[]) => {
+        respondentList.unshift(respondent);
         this.set(respondentList);
-        subscription.unsubscribe();
-      }
-    );
+      });
   }
 
   remove(index: number) {
-    const subscription = this.get().subscribe(
-      (respondentList: RespondentData[]) => {
+    this.get()
+      .pipe(take(1))
+      .subscribe((respondentList: RespondentData[]) => {
         respondentList.splice(index, 1);
         this.set(respondentList);
-        subscription.unsubscribe();
-      }
-    );
+      });
   }
 }
