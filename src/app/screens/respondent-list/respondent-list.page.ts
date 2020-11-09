@@ -1,43 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Storage } from "@ionic/storage";
 
+import { Subscription } from 'rxjs';
+
 import { RespondentService } from "../../services/respondent/respondent.service";
+import { RespondentListState } from '../../stores/respondent-list/respondent-list-state';
 
 import { RespondentData } from 'src/app/interfaces/respondent';
+import { Response } from "../../interfaces/response";
 
 @Component({
-  selector: 'app-respondent-list',
-  templateUrl: './respondent-list.page.html',
-  styleUrls: ['./respondent-list.page.scss'],
+  selector: "app-respondent-list",
+  templateUrl: "./respondent-list.page.html",
+  styleUrls: ["./respondent-list.page.scss"],
 })
-export class RespondentListPage implements OnInit {
-
+export class RespondentListPage implements OnInit, OnDestroy {
+  subscription: Subscription;
   respondents: RespondentData[] = [];
 
   constructor(
     private storage: Storage,
-    private respondentService: RespondentService
-  ) { }
+    private respondentService: RespondentService,
+    public respondentListState: RespondentListState
+  ) {}
 
   ngOnInit() {
     this.fetchAll(null);
+    this.subscribeRespondentList();
   }
 
   fetchAll(refresher: any) {
-    this.storage.get("token").then(token => {
+    this.storage.get("token").then((token) => {
       if (!token) return;
 
       this.respondentService.fetchAll(token).subscribe(
-        res => {
+        (res: Response) => {
           this.storage.set("respondents", res.data);
-          this.respondents = res.data;
+          this.respondentListState.set(res.data);
 
           if (refresher) {
             refresher.target.complete();
           }
         },
-        err => {
+        (err) => {
           console.log(err);
 
           if (refresher) {
@@ -48,8 +54,19 @@ export class RespondentListPage implements OnInit {
     });
   }
 
+  subscribeRespondentList() {
+    this.subscription = this.respondentListState
+      .get()
+      .subscribe((respondents: RespondentData[]) => {
+        this.respondents = respondents;
+      });
+  }
+
   doRefresh(event: any) {
     this.fetchAll(event);
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }

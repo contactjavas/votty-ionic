@@ -8,6 +8,7 @@ import { RespondentListPageRoutingModule } from './respondent-list-routing.modul
 
 import { RespondentListPage } from './respondent-list.page';
 import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
+import { RespondentListState } from 'src/app/stores/respondent-list/respondent-list-state';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
     IonicModule,
     RespondentListPageRoutingModule
   ],
-  declarations: [RespondentListPage, TopbarComponent]
+  declarations: [RespondentListPage, TopbarComponent, RespondentListState]
 })
 export class RespondentListPageModule {}
