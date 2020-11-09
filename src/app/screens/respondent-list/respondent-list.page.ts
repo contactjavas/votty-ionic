@@ -31,27 +31,23 @@ export class RespondentListPage implements OnInit, OnDestroy {
   }
 
   fetchAll(refresher: any) {
-    this.storage.get("token").then((token) => {
-      if (!token) return;
+    this.respondentService.fetchAll().subscribe(
+      (res: Response) => {
+        this.storage.set("respondents", res.data);
+        this.respondentListState.set(res.data);
 
-      this.respondentService.fetchAll(token).subscribe(
-        (res: Response) => {
-          this.storage.set("respondents", res.data);
-          this.respondentListState.set(res.data);
-
-          if (refresher) {
-            refresher.target.complete();
-          }
-        },
-        (err) => {
-          console.log(err);
-
-          if (refresher) {
-            refresher.target.complete();
-          }
+        if (refresher) {
+          refresher.target.complete();
         }
-      );
-    });
+      },
+      (err) => {
+        console.log(err);
+
+        if (refresher) {
+          refresher.target.complete();
+        }
+      }
+    );
   }
 
   subscribeRespondentList() {

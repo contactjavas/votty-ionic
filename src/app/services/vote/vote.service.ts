@@ -19,7 +19,7 @@ export class VoteService {
     private appService: AppService
   ) { }
 
-  fetchAll(token: string): Observable<Response> {
+  fetchAll(): Observable<Response> {
     return this.http
       .get<Response>(
         this.appService.apiUrl + "/votes",

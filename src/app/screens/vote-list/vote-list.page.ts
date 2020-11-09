@@ -42,27 +42,23 @@ export class VoteListPage implements OnInit, OnDestroy {
   }
 
   fetchAll(refresher: any) {
-    this.storage.get("token").then((token) => {
-      if (!token) return;
+    this.voteService.fetchAll().subscribe(
+      (res) => {
+        this.storage.set("votes", res.data);
+        this.votes = res.data;
 
-      this.voteService.fetchAll(token).subscribe(
-        (res) => {
-          this.storage.set("votes", res.data);
-          this.votes = res.data;
-
-          if (refresher) {
-            refresher.target.complete();
-          }
-        },
-        (err) => {
-          console.log(err);
-
-          if (refresher) {
-            refresher.target.complete();
-          }
+        if (refresher) {
+          refresher.target.complete();
         }
-      );
-    });
+      },
+      (err) => {
+        console.log(err);
+
+        if (refresher) {
+          refresher.target.complete();
+        }
+      }
+    );
   }
 
   subscribeVoteList() {

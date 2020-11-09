@@ -8,6 +8,7 @@ import { VoteListPageRoutingModule } from './vote-list-routing.module';
 
 import { VoteListPage } from './vote-list.page';
 import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
+import { VoteListState } from 'src/app/stores/vote-list/vote-list-state';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
     IonicModule,
     VoteListPageRoutingModule
   ],
-  declarations: [VoteListPage, TopbarComponent]
+  declarations: [VoteListPage, TopbarComponent, VoteListState]
 })
 export class VoteListPageModule {}

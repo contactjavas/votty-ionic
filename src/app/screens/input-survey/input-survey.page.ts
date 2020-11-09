@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
 import { Storage } from "@ionic/storage";
 import {
@@ -12,22 +11,24 @@ import {
 
 import { Response } from "../../interfaces/response";
 
-import { RespondentService } from "src/app/services/respondent/respondent.service";
 import { ErrorService } from "src/app/services/error/error.service";
-import { PhotoService } from "src/app/services/photo/photo.service";
-import { AddRespondentFormData } from "src/app/interfaces/form";
-import { RespondentListState } from "src/app/stores/respondent-list/respondent-list-state";
+import { SurveyService } from "src/app/services/survey/survey.service";
+import { VoteService } from "src/app/services/vote/vote.service";
+import { VoteListState } from "src/app/stores/vote-list/vote-list-state";
+import { SurveyData } from "src/app/interfaces/survey";
+import { SurveyListState } from "src/app/stores/survey-list/survey-list-state";
+import { take } from "rxjs/operators";
 
 @Component({
-  selector: "app-add-respondent",
-  templateUrl: "./add-respondent.page.html",
-  styleUrls: ["./add-respondent.page.scss"],
+  selector: "app-input-survey",
+  templateUrl: "./input-survey.page.html",
+  styleUrls: ["./input-survey.page.scss"],
 })
-export class AddRespondentPage implements OnInit {
-  addFormData: AddRespondentFormData;
-  addRespondentForm: FormGroup;
-  capturedPhoto: any;
-  photoSrc: SafeUrl = "assets/images/default-avatar.png";
+export class InputSurveyPage implements OnInit {
+  surveyDetailSet: any; // Really, this is dynamic.
+  inputSurveyForm: FormGroup;
+  surveyId: number;
+  survey: SurveyData;
 
   constructor(
     public loadingController: LoadingController,
@@ -35,14 +36,15 @@ export class AddRespondentPage implements OnInit {
     public alertController: AlertController,
     public storage: Storage,
     private router: Router,
+    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private sanitizer: DomSanitizer,
     public errorService: ErrorService,
-    public respondentService: RespondentService,
-    public photoService: PhotoService,
-    private respondentListState: RespondentListState
+    public surveyService: SurveyService,
+    public voteService: VoteService,
+    private surveyListState: SurveyListState,
+    private voteListState: VoteListState
   ) {
-    this.addRespondentForm = this.formBuilder.group({
+    this.inputSurveyForm = this.formBuilder.group({
       name: ["", Validators.required],
       gender_id: ["", Validators.required],
       age_range: ["", Validators.required],
@@ -56,6 +58,17 @@ export class AddRespondentPage implements OnInit {
   }
 
   ngOnInit() {
+    this.surveyId = Number(this.route.snapshot.paramMap.get("surveyId"));
+
+    this.surveyListState
+      .get()
+      .pipe(take(1))
+      .subscribe((surveyList: SurveyData[]) => {
+        this.survey = surveyList.find((survey) => {
+          return Number(survey.id) === this.surveyId;
+        });
+      });
+
     this.loadForm();
   }
 
@@ -66,9 +79,9 @@ export class AddRespondentPage implements OnInit {
 
     await loading.present();
 
-    this.respondentService.fetchAddFormData().subscribe(
+    this.surveyService.fetchDetailSet(this.surveyId).subscribe(
       (res) => {
-        this.addFormData = res.data;
+        this.surveyDetailSet = res.data;
 
         loading.dismiss();
       },
@@ -80,7 +93,7 @@ export class AddRespondentPage implements OnInit {
   }
 
   async onSubmit() {
-    if (!this.addRespondentForm.valid) {
+    if (!this.inputSurveyForm.valid) {
       this.presentToast();
       return;
     }
@@ -89,15 +102,7 @@ export class AddRespondentPage implements OnInit {
      * We copy the values info to "data",
      * so that we can modify the values without affecting the field's values.
      */
-    let data = this.addRespondentForm.value;
-
-    if (this.capturedPhoto) {
-      const webPath = await fetch(this.capturedPhoto.webPath!);
-      const blob = await webPath.blob();
-  
-      data.photo = blob;
-    }
-
+    let data = this.inputSurveyForm.value;
 
     const loading = await this.loadingController.create({
       message: "Processing...",
@@ -105,9 +110,9 @@ export class AddRespondentPage implements OnInit {
 
     await loading.present();
 
-    this.respondentService.add(data).subscribe(
+    this.voteService.add(data).subscribe(
       (res: Response) => {
-        this.respondentListState.add(res.data);
+        this.voteListState.add(res.data);
         loading.dismiss();
         this.showSuccessMessage(res);
       },
@@ -135,21 +140,12 @@ export class AddRespondentPage implements OnInit {
         {
           text: "OK",
           handler: () => {
-            this.router.navigateByUrl("/app/tabs/respondent-list");
+            this.router.navigateByUrl("/app/tabs/vote-list");
           },
         },
       ],
     });
 
     await alert.present();
-  }
-
-  async capturePhoto() {
-    this.capturedPhoto = await this.photoService.capturePhoto();
-    this.photoSrc = this.sanitizer.bypassSecurityTrustUrl(
-      this.capturedPhoto.webPath
-    );
-
-    console.log(this.capturedPhoto);
   }
 }

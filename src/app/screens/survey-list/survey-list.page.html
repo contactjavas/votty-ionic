@@ -11,7 +11,7 @@
                 Pilih survey yang akan diisi:
             </ion-label>
         </ion-list-header>
-        <ion-item button="true" class="ion-margin" *ngFor="let survey of surveys">
+        <ion-item button="true" class="ion-margin" *ngFor="let survey of surveys" routerLink="/input-survey/{{survey.id}}">
             <ion-label>
                 <ion-text>
                     <h3 class="ion-text-wrap">

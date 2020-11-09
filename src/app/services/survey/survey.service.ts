@@ -19,10 +19,19 @@ export class SurveyService {
     private appService: AppService
   ) { }
 
-  fetchAll(token: string): Observable<Response> {
+  fetchAll(): Observable<Response> {
     return this.http
       .get<Response>(
         this.appService.apiUrl + "/surveys",
+        this.appService.httpOptions
+      )
+      .pipe(catchError(this.errorService.handleError));
+  }
+
+  fetchDetailSet(surveyId: number): Observable<Response> {
+    return this.http
+      .get<Response>(
+        this.appService.apiUrl + "/survey/" + surveyId.toString() + "/questions-choices",
         this.appService.httpOptions
       )
       .pipe(catchError(this.errorService.handleError));

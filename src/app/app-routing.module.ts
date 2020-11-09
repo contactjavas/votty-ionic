@@ -13,10 +13,10 @@ const routes: Routes = [
       import("./screens/tabs/tabs.module").then((m) => m.TabsPageModule),
   },
   {
-    path: "survey-detail",
+    path: "input-survey/:surveyId",
     loadChildren: () =>
-      import("./screens/survey-detail/survey-detail.module").then(
-        (m) => m.SurveyDetailPageModule
+      import("./screens/input-survey/input-survey.module").then(
+        (m) => m.InputSurveyPageModule
       ),
   },
   {
@@ -30,11 +30,14 @@ const routes: Routes = [
     path: "",
     redirectTo: "login",
     pathMatch: "full",
-  },  {
-    path: 'add-respondent',
-    loadChildren: () => import('./screens/add-respondent/add-respondent.module').then( m => m.AddRespondentPageModule)
   },
-
+  {
+    path: "add-respondent",
+    loadChildren: () =>
+      import("./screens/add-respondent/add-respondent.module").then(
+        (m) => m.AddRespondentPageModule
+      ),
+  },
 ];
 
 @NgModule({

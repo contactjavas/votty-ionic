@@ -18,7 +18,7 @@ export class RespondentService {
     private appService: AppService
   ) {}
 
-  fetchAll(token: string): Observable<Response> {
+  fetchAll(): Observable<Response> {
     return this.http
       .get<Response>(
         this.appService.apiUrl + "/respondents",
@@ -27,7 +27,7 @@ export class RespondentService {
       .pipe(catchError(this.errorService.handleError));
   }
 
-  fetchAddFormData(token: string): Observable<Response> {
+  fetchAddFormData(): Observable<Response> {
     return this.http
       .get<Response>(
         this.appService.apiUrl + "/respondents/add",
