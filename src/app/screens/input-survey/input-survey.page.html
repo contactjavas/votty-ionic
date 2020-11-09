@@ -10,9 +10,58 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-label>
-    <ion-text color="light">
-      {{survey ? survey.title : ''}}
-    </ion-text>
-  </ion-label>
+  <ng-container *ngIf="questions">
+    <form [formGroup]="inputSurveyForm" (submit)="onSubmit()">
+
+      <ion-label>
+        <ion-text color="light">
+          {{survey ? survey.title : ''}}
+        </ion-text>
+      </ion-label>
+
+      <ion-card *ngFor="let question of questions">
+        <ion-card-header>
+          <ion-card-subtitle>
+            {{question.title}}
+            <br>
+            <ion-text color="medium">
+              <small>{{question.question_type_id == 1 ? "Pilih satu di antara beberapa pilihan" : "Pilih beberapa di antara beberapa pilihan"}}</small>
+            </ion-text>
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+
+            <ng-container *ngIf="question.question_type_id == 1">
+              <ion-radio-group formControlName="question_choice_{{question.id}}">
+                <ion-item *ngFor="let choice of question.choices">
+                  <ion-radio slot="start" value="{{choice.id}}"></ion-radio>
+                  <ion-label>{{choice.title}}</ion-label>
+                </ion-item>
+              </ion-radio-group>
+            </ng-container>
+
+            <ng-container *ngIf="question.question_type_id == 2">
+              <ion-item *ngFor="let choice of question.choices">
+                <ion-checkbox slot="start" formControlName="question_choices_{{question.id}}" value="{{choice.id}}" checked="false">
+                </ion-checkbox>
+                <ion-label>{{choice.title}}</ion-label>
+              </ion-item>
+            </ng-container>
+
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+    </form>
+  </ng-container>
 </ion-content>
+
+<ion-footer class="footer-cta">
+  <ion-toolbar>
+    <ion-button expand="full" color="secondary" (click)="onSubmit()" class="ion-no-margin footer-cta-button"
+      size="default">
+      Kirim
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

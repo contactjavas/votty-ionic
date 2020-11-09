@@ -25,7 +25,7 @@ import { take } from "rxjs/operators";
   styleUrls: ["./input-survey.page.scss"],
 })
 export class InputSurveyPage implements OnInit {
-  surveyDetailSet: any; // Really, this is dynamic.
+  questions: any; // Really, this is dynamic.
   inputSurveyForm: FormGroup;
   surveyId: number;
   survey: SurveyData;
@@ -43,19 +43,7 @@ export class InputSurveyPage implements OnInit {
     public voteService: VoteService,
     private surveyListState: SurveyListState,
     private voteListState: VoteListState
-  ) {
-    this.inputSurveyForm = this.formBuilder.group({
-      name: ["", Validators.required],
-      gender_id: ["", Validators.required],
-      age_range: ["", Validators.required],
-      religion_id: ["", Validators.required],
-      education_id: ["", Validators.required],
-      job: ["", Validators.required],
-      income_range: ["", Validators.required],
-      active_on_social_media: ["", Validators.required],
-      address: ["", Validators.required],
-    });
-  }
+  ) {}
 
   ngOnInit() {
     this.surveyId = Number(this.route.snapshot.paramMap.get("surveyId"));
@@ -81,7 +69,18 @@ export class InputSurveyPage implements OnInit {
 
     this.surveyService.fetchDetailSet(this.surveyId).subscribe(
       (res) => {
-        this.surveyDetailSet = res.data;
+        let fields ={};
+
+        res.data.forEach((question: any) => {
+          if (question.question_type_id == 1) {
+            fields['question_choice_' + question.id] = ["", Validators.required];
+          } else if (question.question_type_id == 2) {
+            fields["question_choices_" + question.id] = [false];
+          }
+        });
+
+        this.inputSurveyForm = this.formBuilder.group(fields);
+        this.questions = res.data;
 
         loading.dismiss();
       },
@@ -103,6 +102,8 @@ export class InputSurveyPage implements OnInit {
      * so that we can modify the values without affecting the field's values.
      */
     let data = this.inputSurveyForm.value;
+    console.log(data);
+    return;
 
     const loading = await this.loadingController.create({
       message: "Processing...",
@@ -110,7 +111,8 @@ export class InputSurveyPage implements OnInit {
 
     await loading.present();
 
-    this.voteService.add(data).subscribe(
+
+    this.voteService.add(this.surveyId, data).subscribe(
       (res: Response) => {
         this.voteListState.add(res.data);
         loading.dismiss();
