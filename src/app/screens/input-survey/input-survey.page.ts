@@ -1,6 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 
 import { Storage } from "@ionic/storage";
 import {
@@ -10,14 +15,16 @@ import {
 } from "@ionic/angular";
 
 import { Response } from "../../interfaces/response";
+import { take } from "rxjs/operators";
 
 import { ErrorService } from "src/app/services/error/error.service";
 import { SurveyService } from "src/app/services/survey/survey.service";
 import { VoteService } from "src/app/services/vote/vote.service";
 import { VoteListState } from "src/app/stores/vote-list/vote-list-state";
-import { SurveyData } from "src/app/interfaces/survey";
 import { SurveyListState } from "src/app/stores/survey-list/survey-list-state";
-import { take } from "rxjs/operators";
+
+import { SurveyData } from "src/app/interfaces/survey";
+import { IdTitlePairData } from "src/app/interfaces/pairs";
 
 @Component({
   selector: "app-input-survey",
@@ -69,17 +76,54 @@ export class InputSurveyPage implements OnInit {
 
     this.surveyService.fetchDetailSet(this.surveyId).subscribe(
       (res) => {
-        let fields ={};
+        let fields = {};
+
+        // We need to use this after inputSurveyForm declaration after the loop.
+        let choiceControls = [];
 
         res.data.forEach((question: any) => {
           if (question.question_type_id == 1) {
-            fields['question_choice_' + question.id] = ["", Validators.required];
+            fields["question_choice_" + question.id] = [
+              "",
+              Validators.required,
+            ];
           } else if (question.question_type_id == 2) {
-            fields["question_choices_" + question.id] = [false];
+            let controls = [];
+
+            question.choices.forEach((choice: IdTitlePairData) => {
+              controls.push(false);
+            });
+
+            fields["question_choices_" + question.id] = this.formBuilder.group(
+              {}
+            );
+
+            // Lets collect the data so we can loop it later after inputSurveyForm declaration.
+            choiceControls.push({
+              questionId: question.id,
+              choices: question.choices,
+            });
           }
         });
 
         this.inputSurveyForm = this.formBuilder.group(fields);
+
+        // Now inject the controls to the related inputSurveyForm's controls.
+        choiceControls.forEach((choiceControl) => {
+          const checkboxes = <FormGroup>(
+            this.inputSurveyForm.get(
+              "question_choices_" + choiceControl.questionId
+            )
+          );
+
+          choiceControl.choices.forEach((choice: IdTitlePairData) => {
+            checkboxes.addControl(
+              "choice_" + choice.id.toString(),
+              new FormControl(false)
+            );
+          });
+        });
+
         this.questions = res.data;
 
         loading.dismiss();
@@ -99,18 +143,47 @@ export class InputSurveyPage implements OnInit {
 
     /**
      * We copy the values info to "data",
-     * so that we can modify the values without affecting the field's values.
+     * so that we can modify the values without affecting the original values.
      */
     let data = this.inputSurveyForm.value;
-    console.log(data);
-    return;
+
+    for (const prop in data) {
+      if (data.hasOwnProperty(prop)) {
+
+        // If question_type_id is 1 (select some from choices)
+        if (typeof data[prop] == 'string' && !isNaN(data[prop])) {
+          data[prop] = Number(data[prop]);
+        } else {
+          // If question_type_id is 3 (text input, not choices)
+          if (typeof data[prop] == 'string') {
+            // We don't handle text input question.
+          } else {
+            // If question_type_id is 2 (select one from choices)
+            let selectedChoices = [];
+            
+            for (const key in data[prop]) {
+              if (data[prop].hasOwnProperty(key)) {
+                const id = Number(key.replace('choice_', ''));
+
+                if (data[prop][key]) {
+                  selectedChoices.push(id);
+                }
+              }
+            }
+
+            // Convert the value, from object to array.
+            data[prop] = selectedChoices;
+          }
+        }
+
+      }
+    }
 
     const loading = await this.loadingController.create({
       message: "Processing...",
     });
 
     await loading.present();
-
 
     this.voteService.add(this.surveyId, data).subscribe(
       (res: Response) => {

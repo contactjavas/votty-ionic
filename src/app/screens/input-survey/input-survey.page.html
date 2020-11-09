@@ -42,11 +42,13 @@
             </ng-container>
 
             <ng-container *ngIf="question.question_type_id == 2">
-              <ion-item *ngFor="let choice of question.choices">
-                <ion-checkbox slot="start" formControlName="question_choices_{{question.id}}" value="{{choice.id}}" checked="false">
-                </ion-checkbox>
-                <ion-label>{{choice.title}}</ion-label>
-              </ion-item>
+              <div formGroupName="question_choices_{{question.id}}">
+                <ion-item *ngFor="let choice of question.choices">
+                  <ion-checkbox slot="start" formControlName="choice_{{choice.id}}" value="{{choice.id}}">
+                  </ion-checkbox>
+                  <ion-label>{{choice.title}}</ion-label>
+                </ion-item>
+              </div>
             </ng-container>
 
           </ion-list>

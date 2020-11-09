@@ -1,4 +1,4 @@
-import { IdNamePairData } from "./id-name-pair";
+import { IdNamePairData } from "./pairs";
 
 export interface Form {
 }
