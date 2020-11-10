@@ -1,15 +1,14 @@
-import { Component, Injectable, OnInit } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from "rxjs";
 import { take } from "rxjs/operators";
 
 import { VoteData } from "src/app/interfaces/vote";
 
-@Component({})
 @Injectable({
   providedIn: "root",
 })
-export class VoteListState {
+export class VoteListStateService {
   voteList = new BehaviorSubject<VoteData[]>([]);
 
   constructor() {}

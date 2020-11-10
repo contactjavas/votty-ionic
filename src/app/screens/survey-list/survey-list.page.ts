@@ -4,9 +4,10 @@ import { Storage } from "@ionic/storage";
 
 import { Subscription } from "rxjs";
 
-import { SurveyListState } from "../../stores/survey-list/survey-list-state";
+import { SurveyListStateService } from "../../states/survey-list/survey-list-state.service";
 import { SurveyService } from "../../services/survey/survey.service";
 import { SurveyData } from 'src/app/interfaces/survey';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: "app-survey-list",
@@ -19,7 +20,8 @@ export class SurveyListPage implements OnInit, OnDestroy {
 
   constructor(
     private storage: Storage,
-    private surveyListState: SurveyListState,
+    private authService: AuthService,
+    private surveyListState: SurveyListStateService,
     private surveyService: SurveyService
   ) {}
 
@@ -54,6 +56,10 @@ export class SurveyListPage implements OnInit, OnDestroy {
       .subscribe((surveys: SurveyData[]) => {
         this.surveys = surveys;
       });
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   doRefresh(event: any) {

@@ -1,15 +1,14 @@
-import { Component, Injectable, OnInit } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from "rxjs";
 import { take } from "rxjs/operators";
 
 import { SurveyData } from "src/app/interfaces/survey";
 
-@Component({})
 @Injectable({
   providedIn: "root",
 })
-export class SurveyListState {
+export class SurveyListStateService {
   surveyList = new BehaviorSubject<SurveyData[]>([]);
 
   constructor() {}

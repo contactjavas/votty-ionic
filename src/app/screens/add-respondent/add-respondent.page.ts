@@ -16,7 +16,7 @@ import { RespondentService } from "src/app/services/respondent/respondent.servic
 import { ErrorService } from "src/app/services/error/error.service";
 import { PhotoService } from "src/app/services/photo/photo.service";
 import { AddRespondentFormData } from "src/app/interfaces/form";
-import { RespondentListState } from "src/app/stores/respondent-list/respondent-list-state";
+import { RespondentListStateService } from "src/app/states/respondent-list/respondent-list-state.service";
 
 @Component({
   selector: "app-add-respondent",
@@ -40,7 +40,7 @@ export class AddRespondentPage implements OnInit {
     public errorService: ErrorService,
     public respondentService: RespondentService,
     public photoService: PhotoService,
-    private respondentListState: RespondentListState
+    private respondentListState: RespondentListStateService
   ) {
     this.addRespondentForm = this.formBuilder.group({
       name: ["", Validators.required],
@@ -94,10 +94,9 @@ export class AddRespondentPage implements OnInit {
     if (this.capturedPhoto) {
       const webPath = await fetch(this.capturedPhoto.webPath!);
       const blob = await webPath.blob();
-  
+
       data.photo = blob;
     }
-
 
     const loading = await this.loadingController.create({
       message: "Processing...",

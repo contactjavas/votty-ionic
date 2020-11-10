@@ -5,10 +5,11 @@ import { Storage } from "@ionic/storage";
 import { Subscription } from 'rxjs';
 
 import { RespondentService } from "../../services/respondent/respondent.service";
-import { RespondentListState } from '../../stores/respondent-list/respondent-list-state';
+import { RespondentListStateService } from '../../states/respondent-list/respondent-list-state.service';
 
 import { RespondentData } from 'src/app/interfaces/respondent';
 import { Response } from "../../interfaces/response";
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: "app-respondent-list",
@@ -21,8 +22,9 @@ export class RespondentListPage implements OnInit, OnDestroy {
 
   constructor(
     private storage: Storage,
+    private authService: AuthService,
     private respondentService: RespondentService,
-    public respondentListState: RespondentListState
+    public respondentListState: RespondentListStateService
   ) {}
 
   ngOnInit() {
@@ -56,6 +58,10 @@ export class RespondentListPage implements OnInit, OnDestroy {
       .subscribe((respondents: RespondentData[]) => {
         this.respondents = respondents;
       });
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   doRefresh(event: any) {

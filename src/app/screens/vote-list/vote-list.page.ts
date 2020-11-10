@@ -9,7 +9,8 @@ import { id as idLocale } from "date-fns/locale";
 import { VoteService } from "../../services/vote/vote.service";
 
 import { VoteData } from "src/app/interfaces/vote";
-import { VoteListState } from "src/app/stores/vote-list/vote-list-state";
+import { VoteListStateService } from "src/app/states/vote-list/vote-list-state.service";
+import { AuthService } from "src/app/services/auth/auth.service";
 
 @Component({
   selector: "app-vote-list",
@@ -22,8 +23,9 @@ export class VoteListPage implements OnInit, OnDestroy {
 
   constructor(
     private storage: Storage,
+    private authService: AuthService,
     private voteService: VoteService,
-    private voteListState: VoteListState
+    private voteListState: VoteListStateService
   ) {}
 
   ngOnInit() {
@@ -67,6 +69,10 @@ export class VoteListPage implements OnInit, OnDestroy {
       .subscribe((votes: VoteData[]) => {
         this.votes = votes;
       });
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   doRefresh(event: any) {

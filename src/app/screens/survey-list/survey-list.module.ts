@@ -7,8 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { SurveyListPageRoutingModule } from './survey-list-routing.module';
 
 import { SurveyListPage } from './survey-list.page';
-import { TopbarComponent } from 'src/app/components/topbar/topbar.component';
-import { SurveyListState } from 'src/app/stores/survey-list/survey-list-state';
 
 @NgModule({
   imports: [
@@ -17,6 +15,6 @@ import { SurveyListState } from 'src/app/stores/survey-list/survey-list-state';
     IonicModule,
     SurveyListPageRoutingModule,
   ],
-  declarations: [SurveyListPage, TopbarComponent, SurveyListState]
+  declarations: [SurveyListPage]
 })
 export class SurveyListPageModule {}

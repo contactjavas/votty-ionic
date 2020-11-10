@@ -20,8 +20,8 @@ import { take } from "rxjs/operators";
 import { ErrorService } from "src/app/services/error/error.service";
 import { SurveyService } from "src/app/services/survey/survey.service";
 import { VoteService } from "src/app/services/vote/vote.service";
-import { VoteListState } from "src/app/stores/vote-list/vote-list-state";
-import { SurveyListState } from "src/app/stores/survey-list/survey-list-state";
+import { VoteListStateService } from "src/app/states/vote-list/vote-list-state.service";
+import { SurveyListStateService } from "src/app/states/survey-list/survey-list-state.service";
 
 import { SurveyData } from "src/app/interfaces/survey";
 import { IdTitlePairData, valueLabelPairData } from "src/app/interfaces/pairs";
@@ -50,8 +50,8 @@ export class InputSurveyPage implements OnInit {
     public errorService: ErrorService,
     public surveyService: SurveyService,
     public voteService: VoteService,
-    private surveyListState: SurveyListState,
-    private voteListState: VoteListState
+    private surveyListState: SurveyListStateService,
+    private voteListState: VoteListStateService
   ) {}
 
   ngOnInit() {
@@ -74,7 +74,8 @@ export class InputSurveyPage implements OnInit {
     const field: any = document.querySelector(
       ".respondent-autocomplete .native-input"
     );
-    const ajaxUrl = "https://votty-survey.diggy.id/api/awesomplete/respondent/search/{query}/";
+    const ajaxUrl =
+      "https://votty-survey.diggy.id/api/awesomplete/respondent/search/{query}/";
     const thisClass = this;
 
     if (!field) return;
@@ -246,7 +247,6 @@ export class InputSurveyPage implements OnInit {
     data.respondent_id = Number(autocompleteField.dataset.respondentId);
 
     console.log(data);
-    
 
     const loading = await this.loadingController.create({
       message: "Processing...",
