@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import {
   FormBuilder,
@@ -24,7 +24,9 @@ import { VoteListState } from "src/app/stores/vote-list/vote-list-state";
 import { SurveyListState } from "src/app/stores/survey-list/survey-list-state";
 
 import { SurveyData } from "src/app/interfaces/survey";
-import { IdTitlePairData } from "src/app/interfaces/pairs";
+import { IdTitlePairData, valueLabelPairData } from "src/app/interfaces/pairs";
+
+declare var Awesomplete;
 
 @Component({
   selector: "app-input-survey",
@@ -32,7 +34,7 @@ import { IdTitlePairData } from "src/app/interfaces/pairs";
   styleUrls: ["./input-survey.page.scss"],
 })
 export class InputSurveyPage implements OnInit {
-  questions: any; // Really, this is dynamic.
+  questions: any;
   inputSurveyForm: FormGroup;
   surveyId: number;
   survey: SurveyData;
@@ -67,6 +69,63 @@ export class InputSurveyPage implements OnInit {
     this.loadForm();
   }
 
+  setupAutocomplete() {
+    const ajax = new XMLHttpRequest();
+    const field: any = document.querySelector(
+      ".respondent-autocomplete .native-input"
+    );
+    const ajaxUrl = "https://votty-survey.diggy.id/api/awesomplete/respondent/search/{query}/";
+    const thisClass = this;
+
+    if (!field) return;
+
+    let autocomplete: any;
+    let opts: any = {};
+
+    const sendRequest = (query: string) => {
+      const url = ajaxUrl.replace("{query}", query);
+      opts.list = [];
+
+      ajax.abort();
+
+      ajax.open("GET", url, true);
+      ajax.send();
+      ajax.onload = () => {
+        const response = JSON.parse(ajax.responseText);
+        const result = response.message ? response.data : response;
+
+        autocomplete.list = result;
+
+        autocomplete.evaluate();
+      };
+    };
+
+    field.addEventListener("keyup", (e: any) => {
+      if (
+        e.key === "Escape" ||
+        e.key === "Esc" ||
+        e.keyCode === 27 ||
+        e.key === "Enter" ||
+        e.keyCode === 13 ||
+        e.key === "ArrowDown" ||
+        e.keyCode === 40 ||
+        e.key === "ArrowUp" ||
+        e.keyCode === 38
+      ) {
+        return;
+      }
+
+      sendRequest(field.value);
+    });
+
+    opts.replace = (suggestion: valueLabelPairData) => {
+      field.value = suggestion.label;
+      field.dataset.respondentId = suggestion.value;
+    };
+
+    autocomplete = new Awesomplete(field, opts);
+  }
+
   async loadForm() {
     const loading = await this.loadingController.create({
       message: "Loading...",
@@ -76,7 +135,7 @@ export class InputSurveyPage implements OnInit {
 
     this.surveyService.fetchDetailSet(this.surveyId).subscribe(
       (res) => {
-        let fields = {};
+        let fields: any = {};
 
         // We need to use this after inputSurveyForm declaration after the loop.
         let choiceControls = [];
@@ -126,6 +185,7 @@ export class InputSurveyPage implements OnInit {
 
         this.questions = res.data;
 
+        setTimeout(this.setupAutocomplete, 250);
         loading.dismiss();
       },
       (err) => {
@@ -147,23 +207,24 @@ export class InputSurveyPage implements OnInit {
      */
     let data = this.inputSurveyForm.value;
 
+    console.log(data);
+
     for (const prop in data) {
       if (data.hasOwnProperty(prop)) {
-
         // If question_type_id is 1 (select some from choices)
-        if (typeof data[prop] == 'string' && !isNaN(data[prop])) {
+        if (typeof data[prop] == "string" && !isNaN(data[prop])) {
           data[prop] = Number(data[prop]);
         } else {
           // If question_type_id is 3 (text input, not choices)
-          if (typeof data[prop] == 'string') {
+          if (typeof data[prop] == "string") {
             // We don't handle text input question.
           } else {
             // If question_type_id is 2 (select one from choices)
             let selectedChoices = [];
-            
+
             for (const key in data[prop]) {
               if (data[prop].hasOwnProperty(key)) {
-                const id = Number(key.replace('choice_', ''));
+                const id = Number(key.replace("choice_", ""));
 
                 if (data[prop][key]) {
                   selectedChoices.push(id);
@@ -175,9 +236,17 @@ export class InputSurveyPage implements OnInit {
             data[prop] = selectedChoices;
           }
         }
-
       }
     }
+
+    const autocompleteField: any = document.querySelector(
+      ".respondent-autocomplete .native-input"
+    );
+
+    data.respondent_id = Number(autocompleteField.dataset.respondentId);
+
+    console.log(data);
+    
 
     const loading = await this.loadingController.create({
       message: "Processing...",

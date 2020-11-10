@@ -7,6 +7,15 @@ ion-app {
   margin-right: auto;
 }
 
+.awesomplete {
+  width: 100%;
+
+  > ul > li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
 .is-flex {
   display: flex;
   flex-wrap: wrap;
@@ -23,7 +32,8 @@ ion-app {
   height: 100%;
   width: 100%;
 
-  > form, > div {
+  > form,
+  > div {
     width: 100%;
   }
 }
@@ -55,7 +65,8 @@ ion-content {
     }
   }
 
-  .date-column, .time-column {
+  .date-column,
+  .time-column {
     ion-icon {
       margin-right: 5px;
     }

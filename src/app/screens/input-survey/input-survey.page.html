@@ -18,6 +18,13 @@
           {{survey ? survey.title : ''}}
         </ion-text>
       </ion-label>
+      
+      <div class="respondent-box">
+        <ion-item class="" lines="inset">
+          <ion-label position="stacked">Pilih Responden</ion-label>
+          <ion-input class="respondent-autocomplete" placeholder="Cari nama responden"></ion-input>
+        </ion-item>
+      </div>
 
       <ion-card *ngFor="let question of questions">
         <ion-card-header>

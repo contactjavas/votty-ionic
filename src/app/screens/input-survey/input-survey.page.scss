@@ -1,0 +1,13 @@
+.respondent-box {
+  margin: 10px;
+  padding: 16px;
+  padding-left: 0;
+  border-radius: 4px;
+  background-color: #fff;
+  
+  ion-item {
+    border-radius: 4px;
+    overflow: visible;
+    z-index: 1000;
+  }
+}

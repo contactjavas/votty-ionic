@@ -30,7 +30,7 @@ export class VoteService {
   add(surveyId: number, data: any): Observable<Response> {
     return this.http
       .post<Response>(
-        this.appService.apiUrl + "/survey/" + surveyId.toString() + "/votes/add",
+        this.appService.apiUrl + "/survey/" + surveyId.toString() + "/votes/add-new",
         data,
         this.appService.httpOptions
       )
